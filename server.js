@@ -1,10 +1,12 @@
 var express = require('express');
 var socket = require('socket.io');
 
+
+var port = 3000;
 var app = express();    //App Setup
 app.use(express.static(__dirname + '/SClientSide/Dashboard')); //Static Files
-var server = app.listen(80, function () {
-    console.log('Listening to port 80');
+var server = app.listen(port, function () {
+    console.log('Listening to port: ', port);
 });
 
 
@@ -24,10 +26,11 @@ function handleSocket(socket) {
 
     //Register admin and save socket instance to global adminSocket variable
     socket.on('registerAdmin', function (data) {
+        //console.log("SOCKET= ", socket);
         socket.tag = "admin";
         adminSocket = socket;
         console.log(data);
-        console.log("A admin connected: " + socket.id);
+        console.log("An admin connected: " + socket.id);
 
         //Send bot connected + data to web client i.e., list of all connected devices
         adminSocket.emit('registerBotClient', {botDataList: botDataList});
@@ -37,7 +40,7 @@ function handleSocket(socket) {
     });
 
     //To register a bot and send data to web client
-    socket.on('registerBot', function (data) {
+    socket.on('bot-login', function (data) {
         console.log(data);
         socket.tag = data.uid;
         botSocketList.push(socket);
