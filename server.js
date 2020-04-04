@@ -2,7 +2,7 @@ var express = require('express');
 var socket = require('socket.io');
 
 
-var port = 4000;
+var port = 3000;
 var app = express();    //App Setup
 app.use(express.static(__dirname + '/SClientSide/Dashboard')); //Static Files
 var server = app.listen(port, function () {

