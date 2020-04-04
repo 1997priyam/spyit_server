@@ -1,6 +1,5 @@
-var socket = io.connect(window.location.host);       //Connect socket to node.js server
+var socket = io.connect(window.location.hostname+':4000');       //Connect socket to node.js server
 
-console.log(window.location.host);
 socket.emit('registerAdmin', {usrType: 'admin', usrName: 'kiran', pass: 'suthar'});     //Register
 
 var _botDataList = [];      //TO store multiple bots data
