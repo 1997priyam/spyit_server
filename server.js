@@ -4,7 +4,7 @@ const mongoose = require('mongoose')
 
 var saveNotificationToDb = require('./notifications/notificationHandler').saveNotificationToDb;
 
-mongoose.connect('mongodb://localhost/spyit', { useNewUrlParser: true })
+mongoose.connect('mongodb://spyit:spyit%40123@ds163387.mlab.com:63387/spyit', { useNewUrlParser: true })
 const db = mongoose.connection
 db.on('error', (error) => console.error(error))
 db.once('open', () => console.log('connected to database'))
