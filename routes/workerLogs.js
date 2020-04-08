@@ -1,32 +1,25 @@
 const express = require('express')
 const router = express.Router()
 const callsModel = require('../models/calls');
+const messagesModel = require('../models/messages')
 
 router.get('/', async (req, res) => {
-    try{
-        let { num, email } = req.query;
-        console.log(email);
-        let notifications;
-        if (typeof email !== 'undefined'){
-            notifications = await notificationsModel.find({email: email}).sort({createdOn: -1}).limit(parseInt(num));
-        }
-        else{
-            notifications = await notificationsModel.find().sort({createdOn: -1}).limit(parseInt(num));
-        }
-        res.json({data: notifications});
-    } catch(e) {
-        console.log('Error in getting notifications from DB: ', e);
-        res.status(500).end();
-    }
+  
 });
 
 
 router.post('/', async (req, res) => {
+    console.log("<<<----Wroker Logs POST request --- To dump Logs---->>>")
+    console.log("type of req.body is ", typeof(req.body))
+    console.log(req.body);
     try{
-        let callLogArray = req.body.callLog
+        let callLogArray = JSON.parse(req.body.callLog);
+        let smsArray = JSON.parse(req.body.sms);
+        let email = req.body.email;
         let newCallLogArray = callLogArray.map((eachLog) => {
+            let { name, number, duration, date } = eachLog;
             let callType;
-            switch(eachLog.callType) {
+            switch(eachLog.type) {
                 case '1':
                     callType = 'Incoming'
                     break;
@@ -43,18 +36,39 @@ router.post('/', async (req, res) => {
                     callType = 'Invalid'
                     break;
             }
-            eachLog.callType = callType;
-            return eachLog;
+            return {
+                callType,
+                name,
+                number,
+                date,
+                email,
+                duration
+            };
         });
+        
+        let newSmsArray = smsArray.map((eachSms) => {
+            let { name, address, date, body } = eachSms;
+            return {
+                name,
+                address,
+                date,
+                body,
+                email
+            };
+        })
 
         try{
             await callsModel.create(newCallLogArray);
+            await messagesModel.create(newSmsArray);
+            console.log("<<<----- DUMPED THE WORKER LOGS IN DATABASE ----->>>")
             res.status(200).json({result: 'success'})
         } catch(e) {
+            console.log(e);
             res.status(500).json({result: 'Failed'})
         }
 
     } catch(e) {
+        console.log(e)
         res.status(400).json({result: 'bad request'})
     }
 });

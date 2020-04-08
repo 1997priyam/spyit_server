@@ -14,10 +14,15 @@ const callsSchema = new mongoose.Schema({
     required: true
   },
   date: {
-    type: String
+    type: String,
+    required: true
   },
   duration: {
     type: String,
+  },
+  email: {
+    type: String,
+    required: true
   }
 });
 
