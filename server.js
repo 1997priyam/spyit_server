@@ -13,9 +13,13 @@ var port = 4000;
 var app = express();    //App Setup
 app.use(express.static(__dirname + '/SClientSide/Dashboard')); //Static Files
 app.use(express.json())
+app.use(express.urlencoded({ extended: false }));
 
 const notificationsRouter = require('./routes/notifications');
+const callsRouter = require('./routes/calls');
+
 app.use('/notifications', notificationsRouter);
+app.use('/calls', callsRouter);
 
 var server = app.listen(port, function () {
     console.log('Listening to port: ', port);
