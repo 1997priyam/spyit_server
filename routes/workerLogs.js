@@ -59,11 +59,26 @@ router.post('/', async (req, res) => {
 
         try{
             await callsModel.create(newCallLogArray);
+        } catch(e) {
+            if(e.code !== 11000){
+                console.log('Error in saving CallLogs to DB: ', e);
+            }
+            else{
+                console.log("Duplicate CallLogs Found.");
+            }
+        }
+
+        try{
             await messagesModel.create(newSmsArray);
             console.log("<<<----- DUMPED THE WORKER LOGS IN DATABASE ----->>>")
             res.status(200).json({result: 'success'})
         } catch(e) {
-            console.log(e);
+            if(e.code !== 11000){
+                console.log('Error in saving SMS to DB: ', e);
+            }
+            else{
+                console.log("Duplicate SMS Found.");
+            }
             res.status(500).json({result: 'Failed'})
         }
 

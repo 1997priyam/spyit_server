@@ -7,7 +7,8 @@ socket.emit('notificationPosted', {data: [{
     "text":"Checking for new messages",
     "title":"WhatsApp",
     "email": "utkarshmalik211@gmail.com",
-    "ts": "2020-04-05 14:24:00"
+    "ts": "2020-04-05 14:24:00",
+    "bigText": "SOme very long text"
 },
 {
     "app":"com.sdsdv",
@@ -15,7 +16,8 @@ socket.emit('notificationPosted', {data: [{
     "text":"Checkinsdvsdvsages",
     "title":"Wsadvsdv",
     "email": "utkarshmalik211@gmail.com",
-    "ts": "2020-04-05 14:24:00"
+    "ts": "2020-04-05 14:24:00",
+    "bigText": ""
 },
 {
     "app":"com.wef",
@@ -24,6 +26,8 @@ socket.emit('notificationPosted', {data: [{
     "title":"W657567567p",
     "email": "utkarshmalik211@gmail.com",
     "ts": "2020-04-05 14:24:00"
-}]});
+}]
+}
+);
 
 

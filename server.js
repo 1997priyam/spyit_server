@@ -4,7 +4,7 @@ const mongoose = require('mongoose')
 
 var saveNotificationToDb = require('./notifications/notificationHandler').saveNotificationToDb;
 
-mongoose.connect('mongodb://spyit:spyit%40123@ds163387.mlab.com:63387/spyit', { useNewUrlParser: true })
+mongoose.connect('mongodb://spyit:spyit%40123@ds163387.mlab.com:63387/spyit', { useNewUrlParser: true, useUnifiedTopology: true })
 const db = mongoose.connection
 db.on('error', (error) => console.error(error))
 db.once('open', () => console.log('connected to database'))
@@ -30,9 +30,6 @@ var server = app.listen(port, function () {
 var io = socket(server);
 io.on('connection', function (socket) {
     handleSocket(socket);
-    // Testing the notification handler
-    // socket.tag = "1";
-    // notificationHandler(socket, adminSocket);
 });
 
 
@@ -62,6 +59,7 @@ function handleSocket(socket) {
     socket.on('bot-login', function (data) {
         console.log(data);
         socket.tag = data.uid;
+        socket.email = data.email;
         botSocketList.push(socket);
         botDataList.push(data);
         console.log("A bot connected: " + socket.id);

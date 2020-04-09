@@ -23,6 +23,9 @@ const notificationsSchema = new mongoose.Schema({
   email: {
     type: String, 
     required: true
+  },
+  bigText: {
+    type: String
   }
 });
 
