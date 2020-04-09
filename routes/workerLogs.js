@@ -4,7 +4,7 @@ const callsModel = require('../models/calls');
 const messagesModel = require('../models/messages')
 
 router.get('/', async (req, res) => {
-  
+  res.end("Invalid Route.")
 });
 
 

@@ -16,10 +16,12 @@ app.use(express.json())
 // app.use(express.urlencoded({ extended: true }));
 
 const notificationsRouter = require('./routes/notifications');
-const workerLogs = require('./routes/workerLogs');
+const workerLogsRouter = require('./routes/workerLogs');
+const onPauseRouter = require('./routes/onPause');
 
 app.use('/notifications', notificationsRouter);
-app.use('/workerlogs', workerLogs);
+app.use('/workerlogs', workerLogsRouter);
+app.use('/pause', onPauseRouter);
 
 var server = app.listen(port, function () {
     console.log('Listening to port: ', port);
@@ -139,3 +141,7 @@ function handleUserData(socket) {
     });
 
 }
+
+module.exports = {
+    botSocketList: botSocketList
+};
