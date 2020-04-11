@@ -1,6 +1,7 @@
 var express = require('express');
 var socket = require('socket.io');
 const mongoose = require('mongoose')
+const serveIndex = require('serve-index');
 
 var saveNotificationToDb = require('./notifications/notificationHandler').saveNotificationToDb;
 
@@ -12,6 +13,7 @@ db.once('open', () => console.log('connected to database'))
 var port = 4000;
 var app = express();    //App Setup
 app.use(express.static(__dirname + '/SClientSide/Dashboard')); //Static Files
+app.use('/uploads', serveIndex(__dirname + '/uploads'));
 app.use(express.json())
 // app.use(express.urlencoded({ extended: true }));
 
