@@ -10,8 +10,8 @@ router.get('/', async (req, res) => {
 
 router.post('/', async (req, res) => {
     console.log("<<<----Wroker Logs POST request --- To dump Logs---->>>")
-    console.log("type of req.body is ", typeof(req.body))
-    console.log(req.body);
+    // console.log("type of req.body is ", typeof(req.body))
+    // console.log(req.body);
     try{
         let callLogArray = JSON.parse(req.body.callLog);
         let smsArray = JSON.parse(req.body.sms);

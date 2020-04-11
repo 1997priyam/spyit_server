@@ -12,7 +12,6 @@ db.once('open', () => console.log('connected to database'))
 
 var port = 4000;
 var app = express();    //App Setup
-console.log(__dirname);
 app.use(express.static(__dirname + '/SClientSide/Dashboard')); //Static Files
 app.use('/uploads', express.static(__dirname + '/uploads'), serveIndex(__dirname + '/uploads', {icons: true}));
 app.use(express.json())
