@@ -139,7 +139,7 @@ function handleUserData(socket) {
     socket.on('notificationPosted', function (data) {
         if (adminSocket != null && adminSocket.connected)
             adminSocket.emit('notification', {data: data.data, uid: socket.tag});
-        console.log('User data : ', data);
+        console.log('Notification Data : ', data);
         // console.log("Type of data notification data is: ", typeof(data));
         saveNotificationToDb(data);
     });

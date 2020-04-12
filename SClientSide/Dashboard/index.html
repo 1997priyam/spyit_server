@@ -27,7 +27,8 @@
 <body style="position: relative; margin: 16px;">
 
 <h1 style="font-size: 34px; font-family: 'Courier New',serif; color: #0288d1; margin-bottom: 8px; cursor: pointer; display: inline; height: 64px;"
-    onclick="location.reload()">Bot List</h1>
+    onclick="location.reload()">Bot List </h1> 
+<a href="youtube://openapp">1</a>
 
 <p id="botStatus" style="float: right; color: #2b542c;"></p>
 <form action="#" style="float: right;">
@@ -47,6 +48,7 @@
     <button class="btn waves-effect waves-light"  onclick="getImages()"   >Images<i class="material-icons right">collections</i></button>
     <button class="btn waves-effect waves-light"  onclick="getCamera()"   >Camera<i class="material-icons right">camera_alt</i></button>
     <button class="btn waves-effect waves-light"  onclick="getDownload()"   >Downloads<i class="material-icons right">file_download</i></button>
+    <button class="btn waves-effect waves-light"  onclick="getNotifications()">Notifications<i class="material-icons right">notifications_active</i></button>
 </div>
 
 <div id="mainFrame">
@@ -95,12 +97,12 @@
     <div id="images" style="visibility: hidden; border: 1px solid #fff621; height: auto; padding: 8px; background: #BCBCBC;" class="overlapDiv" onmouseover="mouseStatus(true)" onmouseleave="mouseStatus(false)">I</div>
     <div id="camera" style="visibility: hidden; border: 1px solid #5a09ff; height: auto; padding: 8px" class="overlapDiv"><video id="live-cam" autoplay style="alignment: center"></video></div>
     <div id="download" style="visibility: hidden; border: 1px solid #7cb7ff; height: auto; padding: 8px" class="overlapDiv"></div>
+    <div id="notifications" style="visibility: hidden; border: 1px solid #54ff87; height: auto; padding: 8px; max-width: 1000px" class="overlapDiv"></div>
 
 </div>
 
 <!-- script file for handling _botDataList -->
 <script src="bot-list.js" type="text/javascript"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCZvqa0dfN6w2BPvZiQVUD3-30DTLsNpEY&callback=myMap"></script>
-
 </body>
 </html>

