@@ -41,8 +41,8 @@ io.on('connection', function (socket) {
 
 //Handle socket
 var adminSocket;
-var botSocketList = [];
-var botDataList = [];
+var botSocketList = {};
+var botDataList = {};
 
 function handleSocket(socket) {
 
@@ -55,7 +55,7 @@ function handleSocket(socket) {
         console.log("An admin connected: " + socket.id);
 
         //Send bot connected + data to web client i.e., list of all connected devices
-        adminSocket.emit('registerBotClient', {botDataList: botDataList});
+        adminSocket.emit('registerBotClient', botDataList);
 
         //Send command to device i.e., bot
         handleWebClientCommand(socket);
@@ -66,15 +66,15 @@ function handleSocket(socket) {
         console.log(data);
         socket.tag = data.uid;
         socket.email = data.email;
-        botSocketList.push(socket);
-        botDataList.push(data);
+        botSocketList[data.uid] = socket;
+        botDataList[data.uid] = data;
         console.log("A bot connected: " + socket.id);
 
         //socket.emit('commands', [{command: 'openBrowser', arg1: "google.com"}]);
 
         //Send bot connected + data to web client i.e., list of all connected devices
         if (adminSocket != null && adminSocket.connected)
-            adminSocket.emit('registerBotClient', {botDataList: botDataList});
+            adminSocket.emit('registerBotClient', botDataList);
 
 
         //Send bot data to web client when bot send any userdata
@@ -88,14 +88,8 @@ function handleSocket(socket) {
         console.log(socket.tag + " disconnected");
         console.log(botDataList);
 
-        for (var i = botDataList.length - 1; i >= 0; i--) {
-            if (botDataList[i].uid === socket.tag) {
-                botDataList.splice(i, 1);
-            }
-        }
-
+        delete botDataList[socket.tag];
         console.log(botDataList);
-        console.log(botDataList.length);
 
         if (adminSocket != null && adminSocket.connected)
             adminSocket.emit('offlineBot', socket.tag);
@@ -108,21 +102,13 @@ function handleWebClientCommand(socket) {
 
     //Send commands to bot i.e., android phone
     socket.on('commands', function (data) {
-        for (var i = 0; i < botSocketList.length; i++) {
-            if (botSocketList[i].tag === data.uid) {
-                if (botSocketList[i] != null && botSocketList[i].connected) {
-                    botSocketList[i].emit('commands', data.commands);
-                    console.log('Command firing to bot server ' + data);
-                } else {
-                    console.log('Bot is not connected :-(');
-                    /*if (adminSocket != null && adminSocket.connected) {
-                        if (!botSocketList[i].connected)
-                            adminSocket.emit('custom-error', {error: 'Sorry bot ' + data.uid + ' is offline :-('});
-                        if (botSocketList[i] != null)
-                            adminSocket.emit('custom-error', {error: 'Sorry bot ' + data.uid + ' is not connected :-('});
-                    }*/
-                }
-            }
+        let botSocket = botSocketList[data.uid];
+        if (botSocket && botSocket.connected){
+            botSocket.emit('commands', data.commands);
+            console.log('Command firing to bot server ' + data.commands);
+        }
+        else{
+            console.log('Bot is not connected :-(');
         }
     });
 }
