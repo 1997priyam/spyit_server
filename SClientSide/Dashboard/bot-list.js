@@ -72,7 +72,7 @@ new Vue({
                 botStatus_para.style.color = '#2b542c';
             }
             for (var i = 0; i < _botDataList.length; i++)
-                if (_botDataList[i].uid === currentUID && botDataList[i].location ){
+                if (_botDataList[i].uid === currentUID && _botDataList[i].location ){
                     myMap(_botDataList[i].location.lat, _botDataList[i].location.lon);
                 }
 
