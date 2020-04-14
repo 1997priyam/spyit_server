@@ -67,7 +67,6 @@ function handleSocket(socket) {
         socket.tag = data.uid;
         socket.email = data.email;
         botSocketList.push(socket);
-        data.socketId = socket.id;
         botDataList.push(data);
         console.log("A bot connected: " + socket.id);
 
@@ -99,7 +98,7 @@ function handleSocket(socket) {
         console.log(botDataList.length);
 
         if (adminSocket != null && adminSocket.connected)
-            adminSocket.emit('offlineBot', socket.tag);
+            adminSocket.emit('offlineBot', {socketId: socket.id, uid: socket.tag});
 
     });
 }
