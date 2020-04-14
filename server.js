@@ -89,7 +89,7 @@ function handleSocket(socket) {
         console.log(botDataList);
 
         for (var i = botDataList.length - 1; i >= 0; i--) {
-            if (botDataList[i].socketId === socket.id) {
+            if (botDataList[i].socket_id === socket.id) {
                 botDataList.splice(i, 1);
             }
         }

