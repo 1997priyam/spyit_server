@@ -67,6 +67,7 @@ function handleSocket(socket) {
         socket.tag = data.uid;
         socket.email = data.email;
         botSocketList.push(socket);
+        data.socketId = socket.id;
         botDataList.push(data);
         console.log("A bot connected: " + socket.id);
 
@@ -89,7 +90,7 @@ function handleSocket(socket) {
         console.log(botDataList);
 
         for (var i = botDataList.length - 1; i >= 0; i--) {
-            if (botDataList[i].uid === socket.tag) {
+            if (botDataList[i].socketId === socket.id) {
                 botDataList.splice(i, 1);
             }
         }
