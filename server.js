@@ -2,6 +2,7 @@ var express = require('express');
 var socket = require('socket.io');
 const mongoose = require('mongoose')
 const serveIndex = require('serve-index');
+const utils = require('./utils/serverUtils');
 
 var saveNotificationToDb = require('./notifications/notificationHandler').saveNotificationToDb;
 
@@ -137,6 +138,10 @@ function handleUserData(socket) {
     });
 
     socket.on('notificationPosted', function (data) {
+        data.data = data.data.map((notif) => {
+            notif.ts = utils.convertToIST(notif.ts);
+            return notif
+        })
         if (adminSocket != null && adminSocket.connected)
             adminSocket.emit('notification', {data: data.data, uid: socket.tag});
         console.log('Notification Data : ', data);
