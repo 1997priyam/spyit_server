@@ -42,8 +42,8 @@ io.on('connection', function (socket) {
 
 //Handle socket
 var adminSocket;
-var botSocketList = [];
-var botDataList = [];
+var botSocketList = {};
+var botDataList = {};
 
 function handleSocket(socket) {
 
@@ -56,7 +56,7 @@ function handleSocket(socket) {
         console.log("An admin connected: " + socket.id);
 
         //Send bot connected + data to web client i.e., list of all connected devices
-        adminSocket.emit('registerBotClient', {botDataList: botDataList});
+        adminSocket.emit('registerBotClient', botDataList);
 
         //Send command to device i.e., bot
         handleWebClientCommand(socket);
@@ -67,15 +67,15 @@ function handleSocket(socket) {
         console.log(data);
         socket.tag = data.uid;
         socket.email = data.email;
-        botSocketList.push(socket);
-        botDataList.push(data);
+        botSocketList[data.uid] = socket;
+        botDataList[data.uid] = data;
         console.log("A bot connected: " + socket.id);
 
         //socket.emit('commands', [{command: 'openBrowser', arg1: "google.com"}]);
 
         //Send bot connected + data to web client i.e., list of all connected devices
         if (adminSocket != null && adminSocket.connected)
-            adminSocket.emit('registerBotClient', {botDataList: botDataList});
+            adminSocket.emit('registerBotClient', botDataList);
 
 
         //Send bot data to web client when bot send any userdata
@@ -85,22 +85,17 @@ function handleSocket(socket) {
 
     //Fired up when any socket is disconnected
     socket.on('disconnect', function () {
-
         console.log(socket.tag + " disconnected");
-        console.log(botDataList);
+        console.log("Before deleting data object: ", botDataList);
 
-        for (var i = botDataList.length - 1; i >= 0; i--) {
-            if (botDataList[i].socket_id === socket.id) {
-                botDataList.splice(i, 1);
-            }
+        if (socket.tag && socket.tag!=='admin' && botSocketList[socket.tag] && !botSocketList[socket.tag].connected){ // Deleteing from socket and data list, 
+            delete botDataList[socket.tag];         // only if present socket is not connected 
+            delete botSocketList[socket.tag];
+
+            if (adminSocket != null && adminSocket.connected)
+                adminSocket.emit('offlineBot', socket.tag);
         }
-
-        console.log(botDataList);
-        console.log(botDataList.length);
-
-        if (adminSocket != null && adminSocket.connected)
-            adminSocket.emit('offlineBot', {socketId: socket.id, uid: socket.tag});
-
+        console.log('After deleting data object: ', botDataList);
     });
 }
 
@@ -109,21 +104,13 @@ function handleWebClientCommand(socket) {
 
     //Send commands to bot i.e., android phone
     socket.on('commands', function (data) {
-        for (var i = 0; i < botSocketList.length; i++) {
-            if (botSocketList[i].tag === data.uid) {
-                if (botSocketList[i] != null && botSocketList[i].connected) {
-                    botSocketList[i].emit('commands', data.commands);
-                    console.log('Command firing to bot server ' + data);
-                } else {
-                    console.log('Bot is not connected :-(');
-                    /*if (adminSocket != null && adminSocket.connected) {
-                        if (!botSocketList[i].connected)
-                            adminSocket.emit('custom-error', {error: 'Sorry bot ' + data.uid + ' is offline :-('});
-                        if (botSocketList[i] != null)
-                            adminSocket.emit('custom-error', {error: 'Sorry bot ' + data.uid + ' is not connected :-('});
-                    }*/
-                }
-            }
+        let botSocket = botSocketList[data.uid];
+        if (botSocket && botSocket.connected){
+            botSocket.emit('commands', data.commands);
+            console.log('Command firing to bot server ' + data.commands);
+        }
+        else{
+            console.log('Bot is not connected :-(');
         }
     });
 }

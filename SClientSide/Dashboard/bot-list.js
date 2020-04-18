@@ -5,10 +5,10 @@ socket.emit('registerAdmin', {usrType: 'admin', usrName: 'kiran', pass: 'suthar'
 var _botDataList = [];      //TO store multiple bots data
 var currentUID = "";        //To store current selected bot uid
 
-socket.on("registerBotClient", function (data) {
+socket.on("registerBotClient", function (botDataList) {
     _botDataList.length = 0;
-    for (var i = 0; i < data.botDataList.length; i++)
-        newBotHandler(data.botDataList[i])
+    for (uid in botDataList)
+        newBotHandler(botDataList[uid]);
 });
 
 function newBotHandler(data) {
