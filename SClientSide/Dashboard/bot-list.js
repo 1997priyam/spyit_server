@@ -5,10 +5,10 @@ socket.emit('registerAdmin', {usrType: 'admin', usrName: 'kiran', pass: 'suthar'
 var _botDataList = [];      //TO store multiple bots data
 var currentUID = "";        //To store current selected bot uid
 
-socket.on("registerBotClient", function (data) {
+socket.on("registerBotClient", function (botDataList) {
     _botDataList.length = 0;
-    for (var i = 0; i < data.botDataList.length; i++)
-        newBotHandler(data.botDataList[i])
+    for (uid in botDataList)
+        newBotHandler(botDataList[uid]);
 });
 
 function newBotHandler(data) {
@@ -22,7 +22,7 @@ function newBotHandler(data) {
         version: data.version,
         phone: data.phone,
         location: data.location,
-
+        socket_id: data.socket_id,
         status: true,
         lastSeen: d.toDateString()
     };
@@ -72,7 +72,7 @@ new Vue({
                 botStatus_para.style.color = '#2b542c';
             }
             for (var i = 0; i < _botDataList.length; i++)
-                if (_botDataList[i].uid === currentUID)
+                if (_botDataList[i].uid === currentUID && _botDataList[i].location)
                     myMap(_botDataList[i].location.lat, _botDataList[i].location.lon);
 
         }

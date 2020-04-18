@@ -84,16 +84,17 @@ function handleSocket(socket) {
 
     //Fired up when any socket is disconnected
     socket.on('disconnect', function () {
-
         console.log(socket.tag + " disconnected");
-        console.log(botDataList);
+        console.log("Before deleting data object: ", botDataList);
 
-        delete botDataList[socket.tag];
-        console.log(botDataList);
+        if (socket.tag && socket.tag!=='admin' && botSocketList[socket.tag] && !botSocketList[socket.tag].connected){ // Deleteing from socket and data list, 
+            delete botDataList[socket.tag];         // only if present socket is not connected 
+            delete botSocketList[socket.tag];
 
-        if (adminSocket != null && adminSocket.connected)
-            adminSocket.emit('offlineBot', socket.tag);
-
+            if (adminSocket != null && adminSocket.connected)
+                adminSocket.emit('offlineBot', socket.tag);
+        }
+        console.log('After deleting data object: ', botDataList);
     });
 }
 
