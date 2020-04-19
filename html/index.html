@@ -17,7 +17,7 @@
 
 
     <!-- css file for styling -->
-    <link href="style.css" rel="stylesheet" type="text/css"/>
+    <link href="public/style.css" rel="stylesheet" type="text/css"/>
     <!-- To use the google Awesome icons -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <!-- Compiled and minified CSS -->
@@ -39,6 +39,14 @@
         </label>
     </p>
 </form>
+
+<p style="float: right; color: #2b542c;">
+<label>
+    <a href="/logout">
+    <span style="color: #080808; margin-right: 16px">Log Out</span>
+    </a>
+</label>
+</p>
 
 <div id="toolBar" style="margin: 8px 8px 16px 0;height: 0; visibility: hidden;">
     <button class="btn waves-effect waves-light"  onclick="getContacts()" >Contacts<i class="material-icons right">contacts</i></button>
@@ -102,7 +110,7 @@
 </div>
 
 <!-- script file for handling _botDataList -->
-<script src="bot-list.js" type="text/javascript"></script>
+<script src="public/bot-list.js" type="text/javascript"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCZvqa0dfN6w2BPvZiQVUD3-30DTLsNpEY&callback=myMap"></script>
 </body>
 </html>

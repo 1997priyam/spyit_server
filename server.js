@@ -1,6 +1,11 @@
 var express = require('express');
 var socket = require('socket.io');
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
+const session = require('express-session');
+const fileStore = require('session-file-store')(session)
+const morgan = require('morgan');
 const serveIndex = require('serve-index');
 const utils = require('./utils/serverUtils');
 
@@ -11,22 +16,49 @@ const db = mongoose.connection
 db.on('error', (error) => console.error(error))
 db.once('open', () => console.log('connected to database'))
 
-var port = 4000;
+const port = 4000;
 var app = express();    //App Setup
-app.use(express.static(__dirname + '/SClientSide/Dashboard')); //Static Files
+app.use('/public', express.static(__dirname + '/SClientSide/Dashboard')); //Static Files
 app.use('/uploads', express.static(__dirname + '/uploads'), serveIndex(__dirname + '/uploads', {icons: true}));
-app.use(express.json())
-// app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.json())
+app.use(morgan('dev'));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieParser());
+
+app.use(session({
+    key:'user_sid',
+    secret:'$PY17@123',
+    saveUninitialized:false,
+    resave:false,
+    cookie: {
+        expires: 24 * 60 * 60 * 1000
+    },
+    store:new fileStore()
+}))
+
+app.use((req, res, next) => {
+    if (req.cookies.user_sid && !req.session.user) {
+        res.clearCookie('user_sid');        
+    }
+    next();
+});
 
 const notificationsRouter = require('./routes/notifications');
 const workerLogsRouter = require('./routes/workerLogs');
 const onPauseRouter = require('./routes/onPause');
 const submitmp3Router = require('./routes/submitmp3');
+const loginRouter = require('./routes/login');
+const dashboardRouter = require('./routes/dashboard');
+const logoutRouter = require('./routes/logout');
 
+app.use('/', dashboardRouter);
 app.use('/notifications', notificationsRouter);
 app.use('/workerlogs', workerLogsRouter);
 app.use('/pause', onPauseRouter);
 app.use('/submitmp3', submitmp3Router);
+app.use('/login', loginRouter);
+app.use('/logout', logoutRouter);
+
 
 var server = app.listen(port, function () {
     console.log('Listening to port: ', port);
