@@ -136,6 +136,10 @@ function handleUserData(socket) {
         saveNotificationToDb(data);
     });
 
+    socket.on("clientError", function(data){
+        console.log(data);
+    })
+
 }
 
 module.exports = {
