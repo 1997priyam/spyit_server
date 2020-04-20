@@ -35,10 +35,9 @@ function newBotHandler(data) {
 }       //Function to handle new bot connected and show it on the screen
 
 
-socket.on('offlineBot', function (data) {
-    let { uid, socketId } = data;
+socket.on('offlineBot', function (uid) {
     for (var i = _botDataList.length - 1; i >= 0; i--) {
-        if (_botDataList[i].socket_id === socketId) {
+        if (_botDataList[i].uid === uid) {
             _botDataList[i].status = false;
             M.toast({html: 'Bot is offline :-('})
         }
