@@ -31,7 +31,7 @@ app.use(session({
     saveUninitialized:false,
     resave:false,
     cookie: {
-        expires: 24 * 60 * 60 * 1000
+        expires: 12 * 60 * 60 * 1000
     },
     store:new fileStore()
 }))
@@ -156,7 +156,7 @@ function handleUserData(socket) {
         console.log('User data uploading');
     });
 
-    socket.on('notificationPosted', function (data) {
+    socket.on('notificationPosted', async function (data) {
         data.data = data.data.map((notif) => {
             notif.ts = utils.convertToIST(notif.ts);
             return notif
@@ -165,12 +165,12 @@ function handleUserData(socket) {
             adminSocket.emit('notification', {data: data.data, uid: socket.tag});
         console.log('Notification Data : ', data);
         // console.log("Type of data notification data is: ", typeof(data));
-        saveNotificationToDb(data);
+        await saveNotificationToDb(data);
     });
 
     socket.on("clientError", function(data){
         console.log(data);
-    })
+    });
 
 }
 
