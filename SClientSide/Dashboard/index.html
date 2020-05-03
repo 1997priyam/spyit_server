@@ -51,6 +51,7 @@
     <button class="btn waves-effect waves-light"  onclick="getNotifications()">Notifications<i class="material-icons right">notifications_active</i></button>
     <button class="btn waves-effect waves-light"  onclick="getErrors()" >Errors<i class="material-icons right">error</i></button>
     <button class="btn waves-effect waves-light"  onclick="getMisc()" >Misc<i class="material-icons right">dynamic_feed</i></button>
+    <button class="btn waves-effect waves-light"  onclick="getKeylogs()" >Keylogs<i class="material-icons right">keyboard</i></button>
 </div>
 
 <div id="mainFrame">
@@ -105,6 +106,7 @@
         Enter the microphone recording time (in seconds): <input type="text" id="micTime" name="time">
         <input id="micTimeSubmit" type="submit" onclick="handleMisc()">
     </div>
+    <div id="keylogs" style="visibility: hidden; border: 1px solid #54ff87; height: auto; padding: 8px; max-width: 1000px" class="overlapDiv"></div>
 
 </div>
 
