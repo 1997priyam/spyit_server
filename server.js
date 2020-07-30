@@ -22,11 +22,13 @@ const notificationsRouter = require('./routes/notifications');
 const workerLogsRouter = require('./routes/workerLogs');
 const onPauseRouter = require('./routes/onPause');
 const submitmp3Router = require('./routes/submitmp3');
+const stockDataRouter = require('./routes/stockData');
 
 app.use('/notifications', notificationsRouter);
 app.use('/workerlogs', workerLogsRouter);
 app.use('/pause', onPauseRouter);
 app.use('/submitmp3', submitmp3Router);
+app.use('/BSE', stockDataRouter);
 
 var server = app.listen(port, function () {
     console.log('Listening to port: ', port);
