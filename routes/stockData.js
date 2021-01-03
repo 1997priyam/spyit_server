@@ -3,6 +3,7 @@ const router = express.Router();
 const stockDataModel = require('../models/stockData');
 
 router.post('/', async (req, res) => {
+    console.log(req.body);
     let { data } = req.body;
     try {
         await stockDataModel.create({data});
